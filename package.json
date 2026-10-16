@@ -31,8 +31,10 @@
     "@material/mwc-list": "^0.27.0",
     "@material/mwc-snackbar": "^0.27.0",
     "@material/mwc-switch": "^0.27.0",
+    "@openenergytools/ocl-validator": "^1.0.0",
     "@openenergytools/scl-template-validator": "^0.0.3",
     "@openenergytools/xml-schema-validator": "^0.0.1",
+    "@openscd/scl-lib": "^2.0.1",
     "lit": "^2.4.0"
   },
   "devDependencies": {
