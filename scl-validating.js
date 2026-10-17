@@ -7106,7 +7106,11 @@ function findReferencedClientLN(scl, ref) {
     const prefix = getAttributeValue(ref, 'prefix');
     const lnClass = getAttributeValue(ref, 'lnClass');
     const lnInst = getAttributeValue(ref, 'lnInst');
-    const selectorAnyLN = `IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > Server > LDevice > LN0[lnClass="${lnClass}"], IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > Server > LDevice > LN[lnClass="${lnClass}"]`;
+    let selectorAnyLN = '';
+    if (!!apRef)
+        selectorAnyLN = `IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > LN[lnClass="${lnClass}"]`;
+    else
+        selectorAnyLN = `IED[name="${iedName}"] > AccessPoint > LN[lnClass="${lnClass}"]`;
     return Array.from(scl.querySelectorAll(selectorAnyLN)).find(ln => {
         if (prefix !== getAttributeValue(ln, 'prefix'))
             return false;
@@ -8271,8 +8275,9 @@ function ClientLN_Sender_and_receiver_not_in_same_subnetwork(scl, docName) {
         if (!communication)
             return false;
         // Find Client SubNetwork
-        const iedName = getAttributeValue(clientLN, 'iedName');
-        const apRef = getAttributeValue(clientLN, 'apRef');
+        const clientLn = findReferencedClientLN(scl, clientLN);
+        const iedName = clientLn?.closest('IED')?.getAttribute('name') ?? '';
+        const apRef = clientLn?.closest('AccessPoint')?.getAttribute('name') ?? '';
         const clientSubNetwork = communication.querySelector(`:scope > SubNetwork > ConnectedAP[iedName="${iedName}"][apName="${apRef}"]`)?.parentElement;
         if (clientSubNetwork === null)
             return true;
